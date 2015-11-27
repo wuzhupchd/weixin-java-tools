@@ -1,10 +1,10 @@
 package me.chanjar.weixin.mp.util.http;
 
-import com.google.gson.Gson;
 import me.chanjar.weixin.common.bean.result.WxError;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.common.util.http.RequestExecutor;
 import me.chanjar.weixin.common.util.http.Utf8ResponseHandler;
+import me.chanjar.weixin.common.util.json.WxGsonBuilder;
 import me.chanjar.weixin.mp.bean.WxMpMaterial;
 import me.chanjar.weixin.mp.bean.result.WxMpMaterialUploadResult;
 import org.apache.http.HttpHost;
@@ -13,6 +13,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -36,10 +37,12 @@ public class MaterialUploadRequestExecutor implements RequestExecutor<WxMpMateri
       }
       BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
       MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
-      multipartEntityBuilder.addPart("media", new InputStreamBody(bufferedInputStream, material.getName()));
+      multipartEntityBuilder
+          .addPart("media", new InputStreamBody(bufferedInputStream, material.getName()))
+          .setMode(HttpMultipartMode.RFC6532);
       Map<String, String> form = material.getForm();
       if (material.getForm() != null) {
-        multipartEntityBuilder.addTextBody("description", new Gson().toJson(form));
+        multipartEntityBuilder.addTextBody("description", WxGsonBuilder.create().toJson(form));
       }
       httpPost.setEntity(multipartEntityBuilder.build());
       httpPost.setHeader("Content-Type", ContentType.MULTIPART_FORM_DATA.toString());

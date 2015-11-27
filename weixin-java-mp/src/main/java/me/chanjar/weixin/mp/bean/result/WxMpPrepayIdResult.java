@@ -4,10 +4,9 @@ import java.io.Serializable;
 
 /**
  * <pre>
- * 群发消息一发送就返回的结果
+ * 在发起微信支付前，需要调用统一下单接口，获取"预支付交易会话标识"返回的结果
  *
- * 真正的群发消息是否发送成功要看
- * http://mp.weixin.qq.com/wiki/index.php?title=高级群发接口#.E4.BA.8B.E4.BB.B6.E6.8E.A8.E9.80.81.E7.BE.A4.E5.8F.91.E7.BB.93.E6.9E.9C
+ * 统一下单(详见http://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1)
  *
  * </pre>
  *
@@ -23,6 +22,9 @@ public class WxMpPrepayIdResult implements Serializable {
     private String result_code;
     private String prepay_id;
     private String trade_type;
+    private String err_code;
+    private String err_code_des;
+    private String code_url;
 
     public String getReturn_code() {
         return return_code;
@@ -94,5 +96,29 @@ public class WxMpPrepayIdResult implements Serializable {
 
     public void setTrade_type(String trade_type) {
         this.trade_type = trade_type;
+    }
+    
+    public String getErr_code() {
+      return err_code;
+    }
+
+    public void setErr_code(String err_code) {
+      this.err_code = err_code;
+    }
+
+    public String getErr_code_des() {
+      return err_code_des;
+    }
+
+    public void setErr_code_des(String err_code_des) {
+      this.err_code_des = err_code_des;
+    }
+
+    public String getCode_url() {
+      return code_url;
+    }
+
+    public void setCode_url(String code_url) {
+      this.code_url = code_url;
     }
 }
